@@ -49,9 +49,9 @@ spec:
             {{- end }}
             {{- if .Values.kafkaExporter.tls.enabled}}
             - --tls.enabled
-            - --tls.ca-file=/etc/tls-certs/ca-file
-            - --tls.cert-file=/etc/tls-certs/cert-file
-            - --tls.key-file=/etc/tls-certs/key-file
+            - --tls.ca-file=/etc/tls-certs/{{ .Values.kafkaExporter.tls.caFileName }}
+            - --tls.cert-file=/etc/tls-certs/{{ .Values.kafkaExporter.tls.certFileName}}
+            - --tls.key-file=/etc/tls-certs/{{ .Values.kafkaExporter.tls.keyFileName}}
             {{- end }}
             {{- if .Values.kafkaExporter.log }}
             - --log.level={{ .Values.kafkaExporter.log.level }}
@@ -86,14 +86,13 @@ spec:
 
           {{- if .Values.kafkaExporter.tls.enabled }}
           volumeMounts:
-          - name: tls-certs
+          - name: "tls-certs"
             mountPath: "/etc/tls-certs/"
             readOnly: true
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
-
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -107,7 +106,7 @@ spec:
     {{- end }}
     {{- if .Values.kafkaExporter.tls.enabled }}
       volumes:
-      - name: tls-certs
+      - name: "tls-certs"
         secret:
-          secretName: {{ include "kafka-exporter.fullname" . }}
+          secretName: {{ .Values.kafkaExporter.tls.secretName }}
     {{- end }}
