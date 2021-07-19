@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: danielqsj/kafka-exporter
-  tag: latest
+  tag: v1.3.0
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -18,7 +18,11 @@ service:
 
 kafkaExporter:
   kafka:
-    servers: []
+    servers:
+    - kafka-0.kafka-headless.kafka-two.svc.cluster.local:29092
+    - kafka-1.kafka-headless.kafka-two.svc.cluster.local:29092
+    - kafka-2.kafka-headless.kafka-two.svc.cluster.local:29092
+    - kafka-3.kafka-headless.kafka-two.svc.cluster.local:29092
       # - kafka:9092
     # version: "1.0.0"
 
@@ -30,11 +34,12 @@ kafkaExporter:
     mechanism: ""
 
   tls:
-    enabled: false
+    enabled: true
+    secretName: "example-kafka-user"
     insecure-skip-tls-verify: false
-    caFile: ""
-    certFile: ""
-    keyFile: ""
+    caFileName: "ca.crt"
+    certFileName: "tls.crt"
+    keyFileName: "tls.key"
 
   log:
     level: info
@@ -51,17 +56,13 @@ prometheus:
 labels: {}
 podLabels: {}
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
 
 nodeSelector: {}
 
