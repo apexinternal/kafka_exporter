@@ -36,7 +36,7 @@ kafkaExporter:
   tls:
     enabled: true
     secretName: "example-kafka-user"
-    insecure-skip-tls-verify: false
+    insecureSkipTlsVerify: false
     caFileName: "ca.crt"
     certFileName: "tls.crt"
     keyFileName: "tls.key"
