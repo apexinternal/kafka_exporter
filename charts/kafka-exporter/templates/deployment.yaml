@@ -50,7 +50,7 @@ spec:
             {{- if .Values.kafkaExporter.tls.enabled}}
             - --tls.enabled
             {{- if .Values.kafkaExporter.tls.insecureSkipTlsVerify}}
-            - --tls.insecureSkipTlsVerify
+            - --tls.insecure-skip-tls-verify
             {{- else }}
             - --tls.ca-file=/etc/tls-certs/{{ .Values.kafkaExporter.tls.caFileName }}
             - --tls.cert-file=/etc/tls-certs/{{ .Values.kafkaExporter.tls.certFileName}}
